@@ -1,0 +1,15 @@
+{
+  "name": "HitchedJukeBox.Voter",
+  "version": "1.0.0",
+  "description": "The voter service for the HitchedJukeBox",
+  "main": "index.js",
+  "author": "N.Anderton",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.3",
+    "nodejs": "^0.0.0",
+    "socket.io": "^2.0.3",
+    "socket.io-redis": "^5.1.0",
+    "spotify-web-api-node": "^2.4.0"
+  }
+}

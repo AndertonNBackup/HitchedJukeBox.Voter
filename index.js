@@ -10,27 +10,49 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
 });
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', "Voter: " + msg); 
-  });
+var spotifyApi = new SpotifyWebApi({
+  clientId : '4658a83f5b35440398ea4f3590979658',
+  clientSecret : 'f4c1782bf58446518647dd2c9a272bc2'
 });
 
-// var spotifyApi = new SpotifyWebApi({
-//   clientId : '4658a83f5b35440398ea4f3590979658',
-//   clientSecret : 'f4c1782bf58446518647dd2c9a272bc2',
-//   redirectUri : 'http://www.example.com/callback'
-// });
-
-var spotifyApi = new SpotifyWebApi();
-
-// Get Elvis' albums
-spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE')
+spotifyApi.clientCredentialsGrant()
   .then(function(data) {
-    console.log('Artist albums', data.body);
+    console.log('The access token expires in ' + data.body['expires_in']);
+    console.log('The access token is ' + data.body['access_token']);
+
+    // Save the access token so that it's used in future calls
+    spotifyApi.setAccessToken(data.body['access_token']);
+
   }, function(err) {
-    console.error(err);
+        console.log('Something went wrong when retrieving an access token', err);
   });
+
+io.on('connection', function(socket){
+  socket.on('voter search', function(request){
+
+    switch(request.type){
+      case 'Artist':
+        var search = spotifyApi.searchArtists(request.search);
+        break;
+      case 'Album':
+        var search = spotifyApi.searchAlbums(request.search);
+        break;
+      default:
+        var search = spotifyApi.searchTracks(request.search);
+        break;
+    }
+
+    search.then(function(data) {
+      var response = {
+        type: request.type,
+        value: data
+      };
+      io.emit('voter response', response);
+    }, function(err) {
+      console.error(err);
+    }); 
+  });
+});
 
 http.listen(3000, function(){
   console.log('listening on *:3000');

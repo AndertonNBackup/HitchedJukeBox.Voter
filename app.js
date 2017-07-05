@@ -1,9 +1,14 @@
-var app = require('express')();
+var express = require("express"),
+    app = express();
 var exphbs = require('express-handlebars');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var redis = require('socket.io-redis');
 var SpotifyWebApi = require('spotify-web-api-node');
+var path = require('path');
+
+app.use('/dist', express.static(path.join(__dirname, 'dist')));
+app.use('/node_dist', express.static(path.join(__dirname, 'node_modules')));
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');

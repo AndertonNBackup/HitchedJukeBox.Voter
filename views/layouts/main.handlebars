@@ -14,6 +14,8 @@
       #messages li:nth-child(odd) { background: #eee; }
     </style>
 <script src="/socket.io/socket.io.js"></script>
+<script src="/node_dist/handlebars/dist/handlebars.runtime.min.js"></script>
+<script src="/dist/js/compiled.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
   $(function () {
@@ -31,9 +33,8 @@
     });
     socket.on('voter response', function(response){
       console.log(response.type);
-      $('#messages').html('');
-      $('#messages').append($('<li>').text(response.type));
-      $('#messages').append($('<li>').text(JSON.stringify(response.value)));
+      console.log(response.value);
+      $('#messages').html(Handlebars.templates["results-window"](response.value.body.tracks));
     });
   });
 </script>

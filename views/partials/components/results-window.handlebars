@@ -1,0 +1,9 @@
+<ul id="messages">
+    {{#each items}}
+        <div id="track">
+            <span><h4 class="artistName">{{artists.0.name}}</h4> - <h4 class="trackName">{{name}}</h4></span>
+            <img class="albumArt" src="{{album.images.2.url}}"/>
+            <span class="albumTitle">{{albums.0.name}}</span>
+        </div>
+    {{/each}}
+</ul>

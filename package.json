@@ -1,5 +1,10 @@
 {
   "name": "HitchedJukeBox.Voter",
+  "scripts" :
+  { 
+    "build" : "node_modules/handlebars/bin/handlebars views/partials/components/*.handlebars -f dist/js/compiled.js",
+    "start" : "node app.js"
+  },
   "version": "1.0.0",
   "description": "The voter service for the HitchedJukeBox",
   "main": "index.js",

@@ -1,13 +1,17 @@
 var app = require('express')();
+var exphbs = require('express-handlebars');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var redis = require('socket.io-redis');
 var SpotifyWebApi = require('spotify-web-api-node');
 
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
 io.adapter(redis({ host: 'redis', port: 6379 }));
 
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
+    res.render('home');
 });
 
 var spotifyApi = new SpotifyWebApi({

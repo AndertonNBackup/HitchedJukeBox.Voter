@@ -8,5 +8,5 @@ RUN npm install -g -s --no-progress yarn && \
     # yarn run build && \
     # yarn run prune && \
     yarn cache clean
-CMD [ "node", "index.js" ]
+CMD [ "node", "app.js" ]
 EXPOSE 3000

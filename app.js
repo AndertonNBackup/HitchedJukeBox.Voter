@@ -13,7 +13,7 @@ app.use('/node_dist', express.static(path.join(__dirname, 'node_modules')));
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-io.adapter(redis({ host: 'redis', port: 6379 }));
+// io.adapter(redis({ host: 'redis', port: 6379 }));
 
 app.get('/', function(req, res){
     res.render('home');
@@ -38,7 +38,6 @@ spotifyApi.clientCredentialsGrant()
 
 io.on('connection', function(socket){
   socket.on('voter search', function(request){
-
     switch(request.type){
       case 'Artist':
         var search = spotifyApi.searchArtists(request.search);
@@ -50,11 +49,19 @@ io.on('connection', function(socket){
         var search = spotifyApi.searchTracks(request.search);
         break;
     }
-
     search.then(function(data) {
+      var container = data.body.tracks || data.body.artists || data.body.albums;
       var response = {
         type: request.type,
-        value: data
+        booleans: {
+          isAlbumSearch: data.body.albums ? true : false,
+          isArtistSearch: data.body.artists ? true : false,
+          isTrackSearch: data.body.tracks ? true : false
+        },
+        items: container.items,
+        limit: container.limit,
+        total: container.total,
+        offset: container.offset,
       };
       io.emit('voter response', response);
     }, function(err) {

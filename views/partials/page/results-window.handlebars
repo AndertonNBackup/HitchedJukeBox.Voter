@@ -1,5 +1,15 @@
 <ul id="messages">
-    {{#each body.tracks}}
-        {{> components/track}}
-    {{/each}}
+    {{#if booleans.isArtistSearch}}
+        {{#each items}}
+            {{> components/artist}}
+        {{/each}}
+    {{else if booleans.isAlbumSearch}}
+        {{#each items}}
+            {{> components/album}}
+        {{/each}}
+    {{else}}
+        {{#each items}}
+            {{> components/track}}
+        {{/each}}
+    {{/if}}
 </ul>

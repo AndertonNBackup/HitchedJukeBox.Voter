@@ -12,11 +12,12 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
-      .track { min-height: 100px; padding: 20px; }
-      .track:nth-child(odd) { background: #eee; }
-      .track .header { display: block; margin-bottom: 25px; }
-      .track .albumTitle { display: block; widows: 100%; }
-      .track img { float: left; margin-right: 20px; }
+      .item { min-height: 100px; padding: 20px; }
+      .item.artist { min-height: 200px; }
+      .item:nth-child(odd) { background: #eee; }
+      .item .header { display: block; margin-bottom: 25px; }
+      .item .albumTitle { display: block; width: 100%; }
+      .item img { float: left; margin-right: 20px; }
     </style>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/node_dist/handlebars/dist/handlebars.runtime.min.js"></script>
@@ -37,9 +38,8 @@
       return false;
     });
     socket.on('voter response', function(response){
-      console.log(response.type);
-      console.log(response.value);
-      $('#messages').html(Handlebars.templates["results-window"](response.value.body.tracks));
+      console.log(response);
+      $('#messages').html(Handlebars.partials["page/results-window"](response));
     });
   });
 </script>

@@ -12,6 +12,11 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      .track { min-height: 100px; padding: 20px; }
+      .track:nth-child(odd) { background: #eee; }
+      .track .header { display: block; margin-bottom: 25px; }
+      .track .albumTitle { display: block; widows: 100%; }
+      .track img { float: left; margin-right: 20px; }
     </style>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/node_dist/handlebars/dist/handlebars.runtime.min.js"></script>

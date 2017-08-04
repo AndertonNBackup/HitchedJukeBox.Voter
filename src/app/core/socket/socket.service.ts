@@ -8,11 +8,11 @@ export class SocketService {
     private url = 'ws://127.0.0.1:3000';
     private socket: SocketIOClient.Socket;
 
-    sendMessage(message: object) {
-        this.socket.emit('voter search', message);
+    sendMessage(id: string, message: object) {
+        this.socket.emit(id, message);
     }
 
-    getMessages() {
+    getMessages(hook: string) {
         let observable = new Observable(observer => {
 
             this.socket = io.connect(this.url, {
@@ -20,7 +20,7 @@ export class SocketService {
                 transports: ['websocket']
             });
 
-            this.socket.on('voter response', (data: object) => {
+            this.socket.on(hook, (data: object) => {
                 observer.next(data);
             });
 

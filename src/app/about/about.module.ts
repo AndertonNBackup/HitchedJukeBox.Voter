@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AboutRoutingModule } from './about-routing.module';
 import { AboutComponent } from './about.component';
 
+import { TrackComponent } from '../voter/track/track.component';
+import { AlbumComponent } from '../voter/album/album.component';
+import { ArtistComponent } from '../voter/artist/artist.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -14,7 +18,10 @@ import { AboutComponent } from './about.component';
     AboutRoutingModule
   ],
   declarations: [
-    AboutComponent
+    AboutComponent,
+    TrackComponent,
+    AlbumComponent,
+    ArtistComponent
   ]
 })
 export class AboutModule { }

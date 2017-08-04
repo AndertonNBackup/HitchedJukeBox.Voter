@@ -15,6 +15,7 @@ import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 
 import { SocketService } from './core/socket/socket.service';
+import { SearchService } from './core/search/search.service';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { SocketService } from './core/socket/socket.service';
   ],
   declarations: [AppComponent],
   providers: [
-    SocketService
+    SocketService,
+    SearchService
   ],
   bootstrap: [AppComponent]
 })

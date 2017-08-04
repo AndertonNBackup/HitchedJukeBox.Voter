@@ -7,10 +7,25 @@
       <i class="fa fa-bookmark-o"></i> <span translate>Version</span> {{version}}
     </p>
     <p>
-      <input [(ngModel)]="message"  /><button (click)="test()">Send</button>
+      <select [(ngModel)]="searchType">
+        <option *ngFor="let s of searchTypes" [ngValue]="s">{{s.name}}</option>
+      </select>
+      <input [(ngModel)]="message" /><button (click)="test()">Send</button>
     </p>
-    <!-- <li *ngFor="let album of albums">
-      <span class="badge"></span> {{album.name}}
-    </li> -->
+    <div *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 0">
+      <div *ngFor="let track of serverResponse.items">
+        <app-track [track]="track"></app-track>
+      </div>
+    </div>
+    <div *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 1">
+      <div *ngFor="let album of serverResponse.items">
+        <app-album [album]="album"></app-album>
+      </div>
+    </div>
+    <div *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 2">
+      <div *ngFor="let artist of serverResponse.items">
+        <app-artist [artist]="artist"></app-artist>
+      </div>
+    </div>
   </div>
 </div>

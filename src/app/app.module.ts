@@ -14,6 +14,8 @@ import { HomeModule } from './home/home.module';
 import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 
+import { SocketService } from './core/socket/socket.service';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -29,7 +31,9 @@ import { LoginModule } from './login/login.module';
     AppRoutingModule
   ],
   declarations: [AppComponent],
-  providers: [],
+  providers: [
+    SocketService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

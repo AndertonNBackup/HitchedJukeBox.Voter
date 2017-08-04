@@ -6,5 +6,11 @@
     <p>
       <i class="fa fa-bookmark-o"></i> <span translate>Version</span> {{version}}
     </p>
+    <p>
+      <input [(ngModel)]="message"  /><button (click)="test()">Send</button>
+    </p>
+    <!-- <li *ngFor="let album of albums">
+      <span class="badge"></span> {{album.name}}
+    </li> -->
   </div>
 </div>

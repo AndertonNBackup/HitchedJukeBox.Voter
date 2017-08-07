@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
         total: container.total,
         offset: container.offset,
       };
-      io.emit('HJBV_SearchResponse', response);
+      io.emit('HJBV_SpotifySearchResponse', response);
       console.log("Responded");
     }, function (err) {
       console.error(err);
@@ -109,7 +109,7 @@ io.on('connection', function (socket) {
                 total: container.total,
                 offset: container.offset,
               };
-              io.emit('HJBV_SearchResponse', response);
+              io.emit('HJBV_SpotifySearchResponse', response);
               console.log("Responded");
             }, function (err) {
               console.error("Stopping : " + err);

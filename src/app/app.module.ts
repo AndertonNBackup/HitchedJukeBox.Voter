@@ -15,7 +15,7 @@ import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 
 import { SocketService } from './core/socket/socket.service';
-import { SearchService } from './core/search/search.service';
+import { SpotifyService } from './core/spotify/spotify.service';
 
 @NgModule({
   imports: [
@@ -34,7 +34,7 @@ import { SearchService } from './core/search/search.service';
   declarations: [AppComponent],
   providers: [
     SocketService,
-    SearchService
+    SpotifyService
   ],
   bootstrap: [AppComponent]
 })

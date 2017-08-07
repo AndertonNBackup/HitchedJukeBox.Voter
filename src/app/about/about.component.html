@@ -12,18 +12,20 @@
       </select>
       <input [(ngModel)]="message" /><button (click)="test()">Send</button>
     </p>
-    <div *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 0">
-      <div *ngFor="let track of serverResponse.items">
+  </div>
+  <div class="container">
+    <div class="col-md-12" *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 0">
+      <div class="list-group" *ngFor="let track of serverResponse.items">
         <app-track [track]="track"></app-track>
       </div>
     </div>
-    <div *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 1">
-      <div *ngFor="let album of serverResponse.items">
+    <div class="col-md-12" *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 1">
+      <div class="list-group" *ngFor="let album of serverResponse.items">
         <app-album [album]="album"></app-album>
       </div>
     </div>
-    <div *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 2">
-      <div *ngFor="let artist of serverResponse.items">
+    <div class="col-md-12" *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 2">
+      <div class="list-group" *ngFor="let artist of serverResponse.items">
         <app-artist [artist]="artist"></app-artist>
       </div>
     </div>

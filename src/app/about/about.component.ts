@@ -6,10 +6,10 @@ import * as io from 'socket.io-client';
 import { Observable } from 'rxjs/Observable';
 import { ISubscription } from "rxjs/Subscription";
 
-import { SearchService } from '../core/search/search.service';
+import { SpotifyService } from '../core/spotify/spotify.service';
 
 import { IAlbum } from '../core/models/album';
-import { IAlbums } from '../core/models/albums';
+import { SpotifyRequest } from '../core/models/spotify-request';
 import { VoterResponse } from '../core/models/voter-response';
 
 @Component({
@@ -31,25 +31,22 @@ export class AboutComponent implements OnInit, OnDestroy {
     {id: 2, name: "Artist" }
   ];
 
-  constructor(private searchService: SearchService ) { 
+  constructor(private spotifyService: SpotifyService ) { 
 
     this.searchType = this.searchTypes[0];
 
   }
 
   ngOnInit() {
-    this.connection = this.searchService.listen().subscribe(searchResult => {
+    this.connection = this.spotifyService.listen().subscribe(searchResult => {
       this.serverResponse = VoterResponse.fromJSON(searchResult);
       console.log(this.serverResponse);
     });
   }
 
   test() {
-    let searchRequest = {
-      type: this.searchType,
-      search: this.message
-    };
-    this.searchService.search(searchRequest);
+    let searchRequest = new SpotifyRequest(SpotifyRequest.SEARCH, this.message);  
+    this.spotifyService.search(searchRequest);
     this.message = '';
   }
 

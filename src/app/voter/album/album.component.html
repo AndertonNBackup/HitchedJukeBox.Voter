@@ -1,1 +1,15 @@
-<span class="badge">{{album.artists[0].name}}</span> {{album.name}}
+<div class="hjbv-voter-album list-group-item flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{album.name}}</h5>
+        <img class="img-thumbnail" src="{{album.images[1].url}}" style="height: 100px; width: 100px;" />
+    </div>
+    <p class="mb-1">&nbsp;</p>
+    <div class="d-flex w-100 justify-content-between">
+    <small class="text-muted">{{album.artists[0].name}}</small>
+    <div class="btn-group" role="group" aria-label="Basic example" style="float: right;">
+        <button title="Show Tracks" type="button" class="btn btn-secondary"><i class="fa fa-toggle-up"></i></button>
+        <button title="Add Album" type="button" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+        <button title="Remove Album"type="button" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
+    </div>
+    </div>
+</div>

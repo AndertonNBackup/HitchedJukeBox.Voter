@@ -14,6 +14,9 @@ import { HomeModule } from './home/home.module';
 import { AboutModule } from './about/about.module';
 import { LoginModule } from './login/login.module';
 
+import { SocketService } from './core/socket/socket.service';
+import { SpotifyService } from './core/spotify/spotify.service';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -29,7 +32,10 @@ import { LoginModule } from './login/login.module';
     AppRoutingModule
   ],
   declarations: [AppComponent],
-  providers: [],
+  providers: [
+    SocketService,
+    SpotifyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

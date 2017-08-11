@@ -5,11 +5,8 @@
   "scripts": {
     "ng": "ng",
     "build": "npm run env && ng build --aot --prod",
-    "build:dev": "ng build",
-    "build:dev-watch": "ng build --watch",
-    "start:node": "node ./server/server",
-    "start:angular": "ng serve --proxy-config proxy.conf.js",
-    "start": "concurrently \"npm run start:node\" \"npm run start:angular\"",
+    "build:dev": "ng build --watch",
+    "start": "ng serve --proxy-config proxy.conf.js",
     "lint": "ng lint --type-check && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
     "test": "ng test",
     "test:ci": "npm run lint && ng test --single-run --code-coverage",
@@ -44,6 +41,7 @@
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3",
     "socket.io-redis": "^5.1.0",
+    "source-map-support": "^0.4.15",
     "spotify-web-api-node": "^2.4.0",
     "zone.js": "^0.8.4"
   },
@@ -55,7 +53,7 @@
     "@types/jasmine": "^2.5.52",
     "@types/jasminewd2": "^2.0.2",
     "@types/lodash": "^4.14.52",
-    "@types/node": "^8.0.0",
+    "@types/node": "^8.0.20",
     "@types/socket.io-client": "^1.4.29",
     "codelyzer": "~3.1.1",
     "concurrently": "^3.5.0",
@@ -71,12 +69,14 @@
     "karma-jasmine": "^1.1.0",
     "karma-junit-reporter": "^1.2.0",
     "karma-phantomjs-launcher": "^1.0.2",
+    "nodemon": "^1.11.0",
     "phantomjs-prebuilt": "^2.1.14",
     "protractor": "~5.1.2",
     "stylelint": "^7.7.1",
     "stylelint-config-standard": "^16.0.0",
-    "ts-node": "^3.1.0",
+    "ts-node": "^3.3.0",
     "tslint": "~5.4.3",
-    "typescript": "~2.3.3"
+    "typescript": "^2.3.4",
+    "webpack": "^3.5.3"
   }
 }

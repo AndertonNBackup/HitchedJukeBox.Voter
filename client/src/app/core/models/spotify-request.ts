@@ -4,9 +4,9 @@ export class SpotifyRequest {
     public static readonly FETCH_TRACKS: number = 2;
 
     private RequestType: number;
-    private RequestValue: string;
+    private RequestValue: any;
 
-    public constructor(type: number, value: string)
+    public constructor(type: number, value: any)
     {
         this.RequestType = type;
         this.RequestValue = value;  
@@ -17,7 +17,7 @@ export class SpotifyRequest {
         return SpotifyRequest.fetchTypeText(this.RequestType);
     }
 
-    public GetValue(): string
+    public GetValue(): any
     {
         return this.RequestValue;
     }

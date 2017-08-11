@@ -1,4 +1,4 @@
-# HitchedJukeBox Voter
+# Test Jukebox
 
 Welcome to the project documentation!
 

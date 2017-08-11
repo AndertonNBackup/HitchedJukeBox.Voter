@@ -2,9 +2,9 @@
   "generator-ngx-rocket": {
     "version": "1.3.3",
     "props": {
-      "appName": "HitchedJukeBox Voter",
+      "appName": "Test Jukebox",
       "auth": true,
-      "projectName": "hitched-juke-box-voter"
+      "projectName": "test-jukebox"
     }
   }
 }

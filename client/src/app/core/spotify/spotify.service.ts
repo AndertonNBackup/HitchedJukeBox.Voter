@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../socket/socket.service'
 
-import { SpotifyRequest } from '../models/spotify-request';
+import { SpotifyRequest } from '../models/shared/spotify/spotify-request';
 
 @Injectable()
 export class SpotifyService {

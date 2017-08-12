@@ -14,8 +14,11 @@
             "node_modules/@types"
         ]
     },
-    "files": [
-        "./src/*.ts",
-        "./src/services/*.ts"
+    // "files": [
+    //     "./src/*.ts",
+    //     "./src/services/*.ts"
+    // ],
+    "include": [
+        "./src/**/*"
     ]
 }

@@ -9,7 +9,9 @@ import { ISubscription } from "rxjs/Subscription";
 import { SpotifyService } from '../core/spotify/spotify.service';
 
 import { IAlbum } from '../core/models/album';
-import { SpotifyRequest } from '../core/models/spotify-request';
+import { SpotifyRequest } from '../core/models/shared/spotify/spotify-request';
+import { SpotifySearchRequest } from '../core/models/shared/spotify/spotify-search-request';
+import { SpotifySearchResponse } from '../core/models/shared/spotify/spotify-search-response';
 import { VoterResponse } from '../core/models/voter-response';
 
 @Component({
@@ -20,12 +22,12 @@ import { VoterResponse } from '../core/models/voter-response';
 export class AboutComponent implements OnInit, OnDestroy {
 
   version: string = environment.version;
-  private serverResponse: VoterResponse = new VoterResponse();
+  private serverResponse: SpotifySearchResponse;
   private connection: ISubscription;
   public message: string;
 
-  public searchType: object;
-  public searchTypes: Array<object> = [
+  public searchType: {id: number; name: string};
+  public searchTypes: Array<any> = [
     {id: 0, name: "Song" },
     {id: 1, name: "Album" },
     {id: 2, name: "Artist" }
@@ -39,14 +41,15 @@ export class AboutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.connection = this.spotifyService.listen().subscribe(searchResult => {
-      this.serverResponse = VoterResponse.fromJSON(searchResult);
+      this.serverResponse = SpotifySearchResponse.FromObject(searchResult);
       console.log(this.serverResponse);
     });
   }
 
   test() {
-    let searchRequest = new SpotifyRequest(SpotifyRequest.SEARCH, this.message);  
-    this.spotifyService.search(searchRequest);
+    let searchRequest = new SpotifySearchRequest(this.searchType, this.message);
+    let spotifyRequest = new SpotifyRequest(SpotifyRequest.SEARCH, searchRequest);  
+    this.spotifyService.search(spotifyRequest);
     this.message = '';
   }
 

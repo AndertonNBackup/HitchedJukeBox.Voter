@@ -60,7 +60,7 @@ class Server {
         });
 
         this.io.on('connect', (socket: SocketIO.Socket) => {
-            this.spotify.register_hooks(socket);
+            this.spotify.register_hooks(this.io, socket);
 
             console.log('Connected client on port %s.', this.port);
             socket.on('disconnect', () => {

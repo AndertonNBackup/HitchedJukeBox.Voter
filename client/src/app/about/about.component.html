@@ -13,21 +13,21 @@
       <input [(ngModel)]="message" /><button (click)="test()">Send</button>
     </p>
   </div>
-  <div class="container">
-    <div class="col-md-12" *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 0">
-      <div class="list-group" *ngFor="let track of serverResponse.items">
+   <div class="container" *ngIf="serverResponse">
+    <div class="col-md-12" *ngIf="serverResponse.GetType() == 0">
+      <div class="list-group" *ngFor="let track of serverResponse.GetItems()">
         <app-track [track]="track"></app-track>
       </div>
     </div>
-    <div class="col-md-12" *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 1">
-      <div class="list-group" *ngFor="let album of serverResponse.items">
+    <div class="col-md-12" *ngIf="serverResponse.GetType() == 1">
+      <div class="list-group" *ngFor="let album of serverResponse.GetItems()">
         <app-album [album]="album"></app-album>
       </div>
     </div>
-    <div class="col-md-12" *ngIf="serverResponse.type !== undefined && serverResponse.type.id == 2">
-      <div class="list-group" *ngFor="let artist of serverResponse.items">
+    <div class="col-md-12" *ngIf="serverResponse.GetType() == 2">
+      <div class="list-group" *ngFor="let artist of serverResponse.GetItems()">
         <app-artist [artist]="artist"></app-artist>
       </div>
     </div>
-  </div>
+  </div> 
 </div>

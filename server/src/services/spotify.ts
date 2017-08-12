@@ -7,6 +7,10 @@ import { SpotifySearchRequest } from '../models/shared/spotify/spotify-search-re
 import { SpotifySearchResponse } from '../models/shared/spotify/spotify-search-response';
 
 export class SpotifyService {
+    public static readonly SERVICE_PREFIX: string = "Spotify";
+
+    private appPrefix: string;
+
     private io: SocketIO.Server;
     private spotify: SpotifyWebApi;
     private timer: NodeJS.Timer;
@@ -51,17 +55,20 @@ export class SpotifyService {
             });
     }
 
-    public register_hooks(io: SocketIO.Server, socket: SocketIO.Socket): void {
+    public register_hooks(io: SocketIO.Server, socket: SocketIO.Socket, appPrefix: string): void {
         this.io = io;
-        socket.on('test_hook', (spotifyRequest: SpotifyRequest): any => {
-            spotifyRequest = SpotifyRequest.FromObject(spotifyRequest);
-            switch (spotifyRequest.GetType()) {
-                case SpotifyRequest.SEARCH:
-                    this.handle_search(spotifyRequest.GetValue());
-                    break;
-                default:
-            }
-        });
+        this.appPrefix = appPrefix;
+        socket.on(
+            SpotifyRequest.fetchSearchCommandHook(appPrefix, SpotifyService.SERVICE_PREFIX),
+            (spotifyRequest: SpotifyRequest): any => {
+                spotifyRequest = SpotifyRequest.FromObject(spotifyRequest);
+                switch (spotifyRequest.GetType()) {
+                    case SpotifyRequest.SEARCH:
+                        this.handle_search(spotifyRequest.GetValue());
+                        break;
+                    default:
+                }
+            });
     }
 
     private handle_search(searchRequest: SpotifySearchRequest): void {
@@ -80,22 +87,19 @@ export class SpotifyService {
                 searchObject = this.spotify.searchTracks(searchRequest.GetSearchValue());
         }
 
-        console.log("Got Search Request");
-        console.log("Type : " + searchRequest.GetTypeText());
-        console.log("Search : " + searchRequest.GetSearchValue());
-
         searchObject.then((data) => {
             let container = data.body.tracks || data.body.artists || data.body.albums;
-            let response = new SpotifySearchResponse(
-                searchRequest.GetType(),
-                container.items,
-                container.limit,
-                container.total,
-                container.offset
+            this.io.emit(
+                SpotifySearchResponse.fetchSearchResponseHook(this.appPrefix, SpotifyService.SERVICE_PREFIX),
+                new SpotifySearchResponse(
+                    searchRequest.GetType(),
+                    container.items,
+                    container.limit,
+                    container.total,
+                    container.offset
+                )
             );
-            this.io.emit('HJBV_SpotifySearchResponse', response);
         }, (err) => {
-            console.log(err);
             if (err.statusCode == 401) {
                 console.log("Reprocessing Token");
                 this.setup_key();

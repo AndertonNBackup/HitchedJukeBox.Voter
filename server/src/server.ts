@@ -9,7 +9,8 @@ import * as bodyParser from 'body-parser';
 import {SpotifyService} from './services/spotify';
 
 class Server {
-    public static readonly PORT = 8080;
+    public static readonly PORT: number = 8080;
+    public static readonly APP_PREFIX: string = "HJBV";
     public app: any;
     private server: any;
     private io: SocketIO.Server;
@@ -60,7 +61,7 @@ class Server {
         });
 
         this.io.on('connect', (socket: SocketIO.Socket) => {
-            this.spotify.register_hooks(this.io, socket);
+            this.spotify.register_hooks(this.io, socket, Server.APP_PREFIX);
 
             console.log('Connected client on port %s.', this.port);
             socket.on('disconnect', () => {

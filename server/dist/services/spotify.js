@@ -25,23 +25,20 @@ class SpotifyService {
             // Save the access token so that it's used in future calls
             this.spotify.setAccessToken(data.body['access_token']);
             let expiry = parseInt(data.body['expires_in']) - 10;
-            setTimeout(() => {
-                console.log('Regenerating Access Token.');
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
                 this.setup_key();
             }, expiry * 1000);
-            console.log('The access token expires in ' + data.body['expires_in']);
-            console.log('Refreshing in ' + expiry);
             console.log('The access token is ' + data.body['access_token']);
         }, (err) => {
-            console.log('Something went wrong when retrieving an access token', err);
+            console.log('Something went wrong when retrieving an access token: ', err);
         });
     }
-    register_hooks(io) {
-        io.on('test_hook', () => {
+    register_hooks(socket) {
+        socket.on('test_hook', (value) => {
             this.setup_key();
             return true;
         });
     }
 }
-const spotifyService = SpotifyService.bootstrap();
-exports.default = spotifyService;
+exports.SpotifyService = SpotifyService;

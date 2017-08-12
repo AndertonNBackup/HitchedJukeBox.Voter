@@ -5,7 +5,7 @@ import * as io from 'socket.io-client';
 
 @Injectable()
 export class SocketService {
-    private url = 'ws://127.0.0.1:3000';
+    private url = 'ws://127.0.0.1:8080';
     private socket: SocketIOClient.Socket;
 
     sendMessage(id: string, message: object) {

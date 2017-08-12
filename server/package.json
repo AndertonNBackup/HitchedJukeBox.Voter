@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "start": "node ./server/server"
+    "build": "gulp build",
+    "start": "node ./dist/server"
   },
   "dependencies": {
     "cookie-parser": "^1.4.3",

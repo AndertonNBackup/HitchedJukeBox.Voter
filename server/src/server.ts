@@ -6,18 +6,18 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import * as SpotifyService from './services/spotify';
+import {SpotifyService} from './services/spotify';
 
 class Server {
     public static readonly PORT = 8080;
     public app: any;
     private server: any;
     private io: SocketIO.Server;
-    private spotify: any;
+    private spotify: SpotifyService;
     private port: number;
 
     public static bootstrap(): Server {
-        return new Server();
+        return new Server().bootstrap();
     }
 
     constructor() {
@@ -27,6 +27,11 @@ class Server {
         this.sockets();
         this.services();
         this.listen();
+    }
+
+    private bootstrap(): Server {
+
+        return this;
     }
 
     private createApp(): void {
@@ -46,7 +51,7 @@ class Server {
     }
 
     private services(): void {
-        this.spotify = SpotifyService;
+        this.spotify = SpotifyService.bootstrap();
     }
 
     private listen(): void {
@@ -54,13 +59,10 @@ class Server {
             console.log('Running server on port %s', this.port);
         });
 
-        this.io.on('connect', (socket: any) => {
-            console.log('Connected client on port %s.', this.port);
-            socket.on('message', (m: any) => {
-                console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
-            });
+        this.io.on('connect', (socket: SocketIO.Socket) => {
+            this.spotify.register_hooks(socket);
 
+            console.log('Connected client on port %s.', this.port);
             socket.on('disconnect', () => {
                 console.log('Client disconnected');
             });

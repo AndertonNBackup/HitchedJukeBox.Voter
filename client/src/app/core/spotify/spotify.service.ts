@@ -17,7 +17,7 @@ export class SpotifyService {
 
     search(spotifyRequest: SpotifyRequest) {
         let searchCmd = this.servicePrefix + this.searchCommand;
-        this.socket.sendMessage(searchCmd, spotifyRequest);
+        this.socket.sendMessage('test_hook', spotifyRequest);
     }
 
     listen(): Observable<any> {

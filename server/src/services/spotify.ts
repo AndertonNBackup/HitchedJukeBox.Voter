@@ -2,8 +2,9 @@ import * as logger from 'morgan';
 import * as socketIo from "socket.io";
 import * as SpotifyWebApi from 'spotify-web-api-node';
 
-class SpotifyService {
+export class SpotifyService {
     private spotify: any;
+    private timer: NodeJS.Timer;
 
     public static bootstrap(): SpotifyService {
         return new SpotifyService().bootstrap();
@@ -33,27 +34,22 @@ class SpotifyService {
             this.spotify.setAccessToken(data.body['access_token']);
             let expiry: number = parseInt(data.body['expires_in']) - 10;
 
-            setTimeout(() => {
-                console.log('Regenerating Access Token.');
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
                 this.setup_key();
             }, expiry * 1000);
 
-            console.log('The access token expires in ' + data.body['expires_in']);           
-            console.log('Refreshing in ' + expiry);
             console.log('The access token is ' + data.body['access_token']);
 
         }, (err) => {
-            console.log('Something went wrong when retrieving an access token', err);
+            console.log('Something went wrong when retrieving an access token: ', err);
         });
     }
 
-    public register_hooks(io: SocketIO.Server): void {
-        io.on('test_hook', () => {
+    public register_hooks(socket: SocketIO.Socket): void {
+        socket.on('test_hook', (value: any) => {
             this.setup_key();
             return true;
         });
     }
 }
-
-const spotifyService = SpotifyService.bootstrap();
-export default spotifyService;

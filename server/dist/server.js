@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-const SpotifyService = require("./services/spotify");
+const spotify_1 = require("./services/spotify");
 class Server {
     constructor() {
         this.createApp();
@@ -14,7 +14,10 @@ class Server {
         this.listen();
     }
     static bootstrap() {
-        return new Server();
+        return new Server().bootstrap();
+    }
+    bootstrap() {
+        return this;
     }
     createApp() {
         this.app = express();
@@ -29,18 +32,15 @@ class Server {
         this.io = socketIo(this.server);
     }
     services() {
-        this.spotify = SpotifyService;
+        this.spotify = spotify_1.SpotifyService.bootstrap();
     }
     listen() {
         this.server.listen(this.port, () => {
             console.log('Running server on port %s', this.port);
         });
         this.io.on('connect', (socket) => {
+            this.spotify.register_hooks(socket);
             console.log('Connected client on port %s.', this.port);
-            socket.on('message', (m) => {
-                console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
-            });
             socket.on('disconnect', () => {
                 console.log('Client disconnected');
             });

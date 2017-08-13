@@ -15,7 +15,8 @@ export class AlbumComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-
+        this.album = new SpotifyAlbum(this.album);
+        console.log(this.album.GetName());
     }
 
 }

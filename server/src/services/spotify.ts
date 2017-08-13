@@ -5,6 +5,7 @@ import * as SpotifyWebApi from 'spotify-web-api-node';
 import { SpotifyRequest } from '../models/shared/spotify/spotify-request';
 import { SpotifySearchRequest } from '../models/shared/spotify/spotify-search-request';
 import { SpotifySearchResponse } from '../models/shared/spotify/spotify-search-response';
+import { SpotifySearchResponseData } from '../models/shared/spotify/spotify-search-response-data';
 
 export class SpotifyService {
     public static readonly SERVICE_PREFIX: string = "Spotify";
@@ -88,20 +89,19 @@ export class SpotifyService {
         }
 
         searchObject.then((data) => {
-            let container = data.body.tracks || data.body.artists || data.body.albums;
+            let searchData: SpotifySearchResponseData = new SpotifySearchResponseData().loadFromData(data);
             this.io.emit(
                 SpotifySearchResponse.fetchSearchResponseHook(this.appPrefix, SpotifyService.SERVICE_PREFIX),
                 new SpotifySearchResponse(
                     searchRequest.GetType(),
-                    container.items,
-                    container.limit,
-                    container.total,
-                    container.offset
+                    searchData.GetItems(),
+                    searchData.GetLimit(),
+                    searchData.GetTotal(),
+                    searchData.GetOffset()
                 )
             );
         }, (err) => {
             if (err.statusCode == 401) {
-                console.log("Reprocessing Token");
                 this.setup_key();
                 this.handle_search(searchRequest);
             }

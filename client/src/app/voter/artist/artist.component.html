@@ -1,7 +1,7 @@
 <div class="hjbv-voter-artist list-group-item flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">{{artist.name}}</h5>
-        <img class="img-thumbnail" src="{{artist.images[1].url}}" style="height: 100px; width: 100px;" />
+        <img  *ngIf="artist.images[1]" class="img-thumbnail" src="{{artist.images[1].url}}" style="height: 100px; width: 100px;" />
     </div>
     <p class="mb-1">&nbsp;</p>
     <div class="d-flex w-100 justify-content-between">

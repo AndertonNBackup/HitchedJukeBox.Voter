@@ -26,7 +26,7 @@ export class ArtistComponent implements OnInit {
 
     ngOnInit() {
         this.artist = SpotifyArtist.fromJSON(this.artist);
-        let responseHook: string = SpotifyAlbumResponse.fetchTrackResponseHook(SpotifyService.appPrefix, SpotifyService.servicePrefix);
+        let responseHook: string = SpotifyAlbumResponse.fetchAlbumResponseHook(SpotifyService.appPrefix, SpotifyService.servicePrefix);
         this.connection = this.spotifyService.listen(responseHook).subscribe(albumResult => {
             let albumResponse = SpotifyAlbumResponse.FromObject(albumResult);
             if (albumResponse.GetID() == this.artist.GetID()) {

@@ -12,7 +12,6 @@ import { IAlbum } from '../core/models/album';
 import { SpotifyRequest } from '../core/models/shared/spotify/spotify-request';
 import { SpotifySearchRequest } from '../core/models/shared/spotify/spotify-search-request';
 import { SpotifySearchResponse } from '../core/models/shared/spotify/spotify-search-response';
-import { VoterResponse } from '../core/models/voter-response';
 
 @Component({
   selector: 'app-about',
@@ -33,23 +32,24 @@ export class AboutComponent implements OnInit, OnDestroy {
     {id: 2, name: "Artist" }
   ];
 
-  constructor(private spotifyService: SpotifyService ) { 
+  constructor(private spotifyService: SpotifyService) { 
 
     this.searchType = this.searchTypes[0];
 
   }
 
   ngOnInit() {
-    this.connection = this.spotifyService.listen().subscribe(searchResult => {
+    let responseHook: string = SpotifySearchResponse.fetchSearchResponseHook(SpotifyService.appPrefix, SpotifyService.servicePrefix);
+    this.connection = this.spotifyService.listen(responseHook).subscribe(searchResult => {
       this.serverResponse = SpotifySearchResponse.FromObject(searchResult);
       console.log(this.serverResponse);
     });
   }
 
-  test() {
+  search() {
     let searchRequest = new SpotifySearchRequest(this.searchType, this.message);
     let spotifyRequest = new SpotifyRequest(SpotifyRequest.SEARCH, searchRequest);  
-    this.spotifyService.search(spotifyRequest);
+    this.spotifyService.talk(spotifyRequest);
     this.message = '';
   }
 

@@ -10,7 +10,7 @@
       <select [(ngModel)]="searchType">
         <option *ngFor="let s of searchTypes" [ngValue]="s">{{s.name}}</option>
       </select>
-      <input [(ngModel)]="message" /><button (click)="test()">Send</button>
+      <input [(ngModel)]="message" /><button (click)="search()">Send</button>
     </p>
   </div>
    <div class="container" *ngIf="serverResponse">

@@ -8,20 +8,19 @@ import { SpotifySearchResponse } from '../models/shared/spotify/spotify-search-r
 @Injectable()
 export class SpotifyService {
 
-    appPrefix: string = "HJBV";
-    servicePrefix: string = 'Spotify';
+    public static appPrefix: string = "HJBV";
+    public static servicePrefix: string = 'Spotify';
 
     constructor(private socket: SocketService) {
 
     }
 
-    search(spotifyRequest: SpotifyRequest) {
-        let searchHook = SpotifyRequest.fetchSearchCommandHook(this.appPrefix, this.servicePrefix);
+    talk(spotifyRequest: SpotifyRequest):void {
+        let searchHook = SpotifyRequest.fetchCommandHook(SpotifyService.appPrefix, SpotifyService.servicePrefix);
         this.socket.sendMessage(searchHook, spotifyRequest);
     }
 
-    listen(): Observable<any> {
-        let responseHook = SpotifySearchResponse.fetchSearchResponseHook(this.appPrefix, this.servicePrefix);
+    listen(responseHook: string): Observable<any> {
         return this.socket.getMessages(responseHook);
     };
 

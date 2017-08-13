@@ -1,14 +1,15 @@
 <div class="hjbv-voter-track list-group-item flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">{{track.name}}</h5>
-        <img *ngIf="track.album.images[1]" class="img-thumbnail" src="{{track.album.images[1].url}}" style="height: 100px; width: 100px;" />
+        <h5 class="mb-1"><span *ngIf="track.track_number">{{track.track_number}} - </span>{{track.name}}</h5>
+        <img *ngIf="track.album && track.album.images[1]" class="img-thumbnail" src="{{track.album.images[1].url}}" style="height: 100px; width: 100px;"
+        />
     </div>
-    <p class="mb-1">...from the album "{{track.album.name}}"</p>
+    <p *ngIf="track.album" class="mb-1">...from the album "{{track.album.name}}"</p>
     <div class="d-flex w-100 justify-content-between">
-    <small class="text-muted">{{track.artists[0].name}}</small>
-    <div class="btn-group" role="group" aria-label="Basic example" style="float: right;">
-        <button title="Add Track" type="button" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
-        <button title="Remove Track" type="button" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
-    </div>
+        <small class="text-muted"><span *ngIf="track.album">{{track.artists[0].name}}</span>&nbsp;</small>
+        <div class="btn-group" role="group" aria-label="Basic example" style="float: right;">
+            <button title="Add Track" type="button" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
+            <button title="Remove Track" type="button" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
+        </div>
     </div>
 </div>

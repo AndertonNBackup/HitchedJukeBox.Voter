@@ -13,7 +13,7 @@ export class TrackComponent implements OnInit {
     constructor() { }
 
     ngOnInit() {
-
+        console.log(this.track);
     }
 
 }

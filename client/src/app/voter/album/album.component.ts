@@ -24,7 +24,7 @@ export class AlbumComponent implements OnInit {
     constructor(private spotifyService: SpotifyService) { }
 
     ngOnInit() {
-        this.album = new SpotifyAlbum(this.album);
+        this.album = SpotifyAlbum.fromJSON(this.album);
         let responseHook: string = SpotifyTrackResponse.fetchTrackResponseHook(SpotifyService.appPrefix, SpotifyService.servicePrefix);
         this.connection = this.spotifyService.listen(responseHook).subscribe(trackResult => {
             let trackResponse = SpotifyTrackResponse.FromObject(trackResult);

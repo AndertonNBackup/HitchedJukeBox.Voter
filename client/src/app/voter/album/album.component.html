@@ -7,7 +7,7 @@
     <div class="d-flex w-100 justify-content-between">
         <small class="text-muted">{{album.artists[0].name}}</small>
         <div class="btn-group" role="group" aria-label="Basic example" style="float: right;">
-            <button title="Show Tracks" type="button" class="btn btn-secondary" (click)="fetchTracks()"><i *ngIf="amFetchingTracks" class="fa fa-spin fa-spinner"></i><i *ngIf="!amFetchingTracks" class="fa fa-toggle-up"></i></button>
+            <button [disabled]="amFetchingTracks && true || false" title="Show Tracks" type="button" class="btn btn-secondary" (click)="fetchTracks()"><i *ngIf="amFetchingTracks" class="fa fa-spin fa-spinner"></i><i *ngIf="!amFetchingTracks" class="fa fa-toggle-up"></i></button>
             <button title="Add Album" type="button" class="btn btn-secondary"><i class="fa fa-plus"></i></button>
             <button title="Remove Album" type="button" class="btn btn-secondary"><i class="fa fa-minus"></i></button>
         </div>

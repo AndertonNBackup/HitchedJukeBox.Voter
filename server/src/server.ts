@@ -6,6 +6,8 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
+import * as Users from './services/user';
+
 import {SpotifyService} from './services/spotify';
 
 class Server {
@@ -16,8 +18,6 @@ class Server {
     private io: SocketIO.Server;
     private spotify: SpotifyService;
     private port: number;
-
-    private connectedUserMap: Map<string, any>;
 
     public static bootstrap(): Server {
         return new Server().bootstrap();
@@ -30,7 +30,6 @@ class Server {
         this.sockets();
         this.services();
         this.listen();
-        this.connectedUserMap = new Map<string, any>();
     }
 
     private bootstrap(): Server {
@@ -64,20 +63,21 @@ class Server {
         });
 
         this.io.on('connect', (socket: SocketIO.Socket) => {
-            this.connectedUserMap.set(socket.id, { status:'online', name: 'none' });
+            let connectedUserMap: Map<string, any> = Users.getMap();
+            connectedUserMap.set(socket.id, { status:'online', name: 'none' });
 
             console.log('Connected client on port %s.', this.port);
             console.log('Connected client id : %s.', socket.id);
 
             socket.on('recieveUserName', (data) => {
-                let user = this.connectedUserMap.get(socket.id);
+                let user = connectedUserMap.get(socket.id);
                 user.name = data.name;
                 console.log('Connected client name : %s.', user.name);
-                this.spotify.register_hooks(this.connectedUserMap, this.io, socket, Server.APP_PREFIX);
+                this.spotify.register_hooks(this.io, socket, Server.APP_PREFIX);
             });
             socket.on('disconnect', () => {
                 console.log('Client disconnected');
-                let user = this.connectedUserMap.get(socket.id);
+                let user = connectedUserMap.get(socket.id);
                 user.status = 'offline';
             });
         });

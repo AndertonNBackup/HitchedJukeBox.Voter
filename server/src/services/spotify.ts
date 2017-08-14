@@ -62,29 +62,32 @@ export class SpotifyService {
             });
     }
 
-    public register_hooks(io: SocketIO.Server, socket: SocketIO.Socket, appPrefix: string): void {
+    public register_hooks(connectedUserMap: Map<string, any>, io: SocketIO.Server, socket: SocketIO.Socket, appPrefix: string): void {
         this.io = io;
         this.appPrefix = appPrefix;
         socket.on(
             SpotifyRequest.fetchCommandHook(appPrefix, SpotifyService.SERVICE_PREFIX),
             (spotifyRequest: SpotifyRequest): any => {
+                console.log('Connected client id : %s.', socket.id);
+                let user = connectedUserMap.get(socket.id);
+                console.log('Connected client name : %s.', user.name);
                 spotifyRequest = SpotifyRequest.FromObject(spotifyRequest);
                 switch (spotifyRequest.GetType()) {
                     case SpotifyRequest.SEARCH:
-                        this.handle_search(spotifyRequest.GetValue());
+                        this.handle_search(socket, spotifyRequest.GetValue());
                         break;
                     case SpotifyRequest.FETCH_TRACKS:
-                        this.handle_track_request(spotifyRequest.GetValue());
+                        this.handle_track_request(socket, spotifyRequest.GetValue());
                         break;
                     case SpotifyRequest.FETCH_ALBUMS:
-                        this.handle_album_request(spotifyRequest.GetValue());
+                        this.handle_album_request(socket, spotifyRequest.GetValue());
                         break;
                     default:
                 }
             });
     }
 
-    private handle_search(searchRequest: SpotifySearchRequest): void {
+    private handle_search(socket: SocketIO.Socket, searchRequest: SpotifySearchRequest): void {
         searchRequest = SpotifySearchRequest.FromObject(searchRequest);
 
         let searchObject: any;
@@ -102,7 +105,7 @@ export class SpotifyService {
 
         searchObject.then((data) => {
             let searchData: SpotifySearchResponseData = new SpotifySearchResponseData().loadFromData(data);
-            this.io.emit(
+            socket.emit(
                 SpotifySearchResponse.fetchSearchResponseHook(this.appPrefix, SpotifyService.SERVICE_PREFIX),
                 new SpotifySearchResponse(
                     searchRequest.GetType(),
@@ -115,19 +118,19 @@ export class SpotifyService {
         }, (err) => {
             if (err.statusCode == 401) {
                 this.setup_key();
-                this.handle_search(searchRequest);
+                this.handle_search(socket, searchRequest);
             }
         });
     }
 
-    private handle_track_request(trackRequest: SpotifyTrackRequest): void
+    private handle_track_request(socket: SocketIO.Socket, trackRequest: SpotifyTrackRequest): void
     {
         trackRequest = SpotifyTrackRequest.FromObject(trackRequest);
         let searchObject: any = this.spotify.getAlbumTracks(trackRequest.GetAlbumID());
 
         searchObject.then((data) => {
             let trackData: SpotifyTrackResponseData = new SpotifyTrackResponseData().loadFromData(data);
-            this.io.emit(
+            socket.emit(
                 SpotifyTrackResponse.fetchTrackResponseHook(this.appPrefix, SpotifyService.SERVICE_PREFIX),
                 new SpotifyTrackResponse(
                     trackRequest.GetAlbumID(),
@@ -142,14 +145,14 @@ export class SpotifyService {
         });
     }
 
-    private handle_album_request(albumRequest: SpotifyAlbumRequest): void
+    private handle_album_request(socket: SocketIO.Socket, albumRequest: SpotifyAlbumRequest): void
     {
         albumRequest = SpotifyAlbumRequest.FromObject(albumRequest);
         let searchObject: any = this.spotify.getArtistAlbums(albumRequest.GetArtistID());
 
         searchObject.then((data) => {
             let albumData: SpotifyAlbumResponseData = new SpotifyAlbumResponseData().loadFromData(data);
-            this.io.emit(
+            socket.emit(
                 SpotifyAlbumResponse.fetchAlbumResponseHook(this.appPrefix, SpotifyService.SERVICE_PREFIX),
                 new SpotifyAlbumResponse(
                     albumRequest.GetArtistID(),

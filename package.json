@@ -1,0 +1,13 @@
+{
+  "name": "hitchedjukebox.voter",
+  "version": "1.0.0",
+  "description": "The voter microservice for the hitched jukebox application",
+  "main": "index.js",
+  "scripts": {
+    "build": "docker build -t hitchedjukebox.voter:dev .",
+    "start": "sh development.sh",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "N. D. Anderton",
+  "license": "ISC"
+}

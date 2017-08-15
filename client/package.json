@@ -6,6 +6,7 @@
     "ng": "ng",
     "build": "npm run env && ng build --aot --prod",
     "start": "ng serve --proxy-config proxy.conf.js",
+    "start:docker": "ng serve --proxy-config proxy.conf.js --host 0.0.0.0 --port 4200",
     "lint": "ng lint --type-check && stylelint \"src/**/*.scss\" --syntax scss && htmlhint \"src\" --config .htmlhintrc",
     "test": "ng test",
     "test:ci": "npm run lint && ng test --single-run --code-coverage",

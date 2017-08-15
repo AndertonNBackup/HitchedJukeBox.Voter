@@ -6,9 +6,9 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import * as Users from './services/user';
+import { UserFunctions } from './services/user';
 
-import {SpotifyService} from './services/spotify';
+import { SpotifyService } from './services/spotify';
 
 class Server {
     public static readonly PORT: number = 8080;
@@ -63,7 +63,7 @@ class Server {
         });
 
         this.io.on('connect', (socket: SocketIO.Socket) => {
-            let connectedUserMap: Map<string, any> = Users.getMap();
+            let connectedUserMap: Map<string, any> = UserFunctions.getMap();
             connectedUserMap.set(socket.id, { status:'online', name: 'none' });
 
             console.log('Connected client on port %s.', this.port);

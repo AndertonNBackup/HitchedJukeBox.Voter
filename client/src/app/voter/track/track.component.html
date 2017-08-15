@@ -1,6 +1,6 @@
 <div class="hjbv-voter-track list-group-item flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1"><span *ngIf="track.track_number">{{track.track_number}} - </span>{{track.name}}</h5>
+        <h5 class="mb-1"><span *ngIf="!track.album && track.track_number">{{track.track_number}} - </span>{{track.name}}</h5>
         <img *ngIf="track.album && track.album.images[1]" class="img-thumbnail" src="{{track.album.images[1].url}}" style="height: 100px; width: 100px;"
         />
     </div>

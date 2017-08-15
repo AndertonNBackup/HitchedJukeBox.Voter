@@ -2,7 +2,7 @@ import * as logger from 'morgan';
 import * as socketIo from "socket.io";
 import * as SpotifyWebApi from 'spotify-web-api-node';
 
-import * as Users from './user';
+import { UserFunctions } from './user';
 
 import { SpotifyRequest } from '../models/shared/spotify/spotify-request';
 import { SpotifySearchRequest } from '../models/shared/spotify/spotify-search-request';
@@ -57,7 +57,7 @@ export class SpotifyService {
                     this.setup_key();
                 }, expiry * 1000);
 
-                console.log('The access token is ' + data.body['access_token']);
+                console.log('Your  access token is ' + data.body['access_token']);
 
             }, (err) => {
                 console.log('Something went wrong when retrieving an access token: ', err);
@@ -70,6 +70,12 @@ export class SpotifyService {
         socket.on(
             SpotifyRequest.fetchCommandHook(appPrefix, SpotifyService.SERVICE_PREFIX),
             (spotifyRequest: SpotifyRequest): any => {
+
+                let user = UserFunctions.getUser(socket.id);
+                console.log('Processing Request for client name : %s.', user.name);
+                console.log('Total Users Is : %s.', UserFunctions.getOnlineUserCount());
+                console.log('User Key By Name Is : %s.', UserFunctions.getSocketIdForUserName(user.name));
+
                 spotifyRequest = SpotifyRequest.FromObject(spotifyRequest);
                 switch (spotifyRequest.GetType()) {
                     case SpotifyRequest.SEARCH:
@@ -125,17 +131,6 @@ export class SpotifyService {
     private handle_track_request(socket: SocketIO.Socket, trackRequest: SpotifyTrackRequest): void {
         trackRequest = SpotifyTrackRequest.FromObject(trackRequest);
         let searchObject: any = this.spotify.getAlbumTracks(trackRequest.GetAlbumID());
-
-        let ConnectedUserMap: Map<string, any> = Users.getMap();
-        let user = ConnectedUserMap.get(socket.id);
-        console.log('Track Request for client name : %s.', user.name);
-        let onlineUsers: number = 0;
-        ConnectedUserMap.forEach((value: any, key: string, map: Map<string, any>) => {
-            if(value.status === 'online') {
-                onlineUsers++;
-            }
-        });
-        console.log('Total Users Is : %s.', onlineUsers);
 
         searchObject.then((data) => {
             let trackData: SpotifyTrackResponseData = new SpotifyTrackResponseData().loadFromData(data);

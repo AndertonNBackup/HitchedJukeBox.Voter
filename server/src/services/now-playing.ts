@@ -124,6 +124,9 @@ export class NowPlayingService {
         let nowPlayingItem: NowPlayingItem = this.MainQueue.find(item => item.getId() === commandRequest.GetIndex());
         let user = UserFunctions.getUser(socket.id);
         nowPlayingItem.AddVote(user.name);
+        this.MainQueue = this.MainQueue.sort((itemA, itemB) => {
+            return itemA.GetVoteCount() > itemB.GetVoteCount() ? -1 : itemA.GetVoteCount() == itemB.GetVoteCount() ? 0 : 1;
+        });
         let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
         socket.emit(
             NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
@@ -143,6 +146,9 @@ export class NowPlayingService {
         if(nowPlayingItem.GetVoteCount() <= 0) {
             this.MainQueue = this.MainQueue.filter(item => item.getId() !== nowPlayingItem.getId());
         }
+        this.MainQueue = this.MainQueue.sort((itemA, itemB) => {
+            return itemA.GetVoteCount() > itemB.GetVoteCount() ? -1 : itemA.GetVoteCount() == itemB.GetVoteCount() ? 0 : 1
+        });       
         let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
         socket.emit(
             NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),

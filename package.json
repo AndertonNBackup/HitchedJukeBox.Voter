@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "docker build -t hitchedjukebox.voter:dev .",
+    "logs": "docker logs voter.dev",
+    "logs:follow": "docker logs voter.dev --follow",
     "start": "sh development.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

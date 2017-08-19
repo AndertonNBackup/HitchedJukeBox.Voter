@@ -9,6 +9,7 @@ import * as bodyParser from 'body-parser';
 import { UserFunctions } from './services/user';
 
 import { SpotifyService } from './services/spotify';
+import { NowPlayingService } from './services/now-playing';
 
 class Server {
     public static readonly PORT: number = 8080;
@@ -17,6 +18,7 @@ class Server {
     private server: any;
     private io: SocketIO.Server;
     private spotify: SpotifyService;
+    private nowPlaying: NowPlayingService;
     private port: number;
 
     public static bootstrap(): Server {
@@ -55,6 +57,7 @@ class Server {
 
     private services(): void {
         this.spotify = SpotifyService.bootstrap();
+        this.nowPlaying = NowPlayingService.bootstrap();
     }
 
     private listen(): void {
@@ -74,6 +77,7 @@ class Server {
                 user.name = data.name;
                 console.log('Connected client name : %s.', user.name);
                 this.spotify.register_hooks(this.io, socket, Server.APP_PREFIX);
+                this.nowPlaying.register_hooks(this.io, socket, Server.APP_PREFIX);
             });
             socket.on('disconnect', () => {
                 console.log('Client disconnected');

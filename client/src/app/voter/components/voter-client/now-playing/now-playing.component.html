@@ -1,0 +1,20 @@
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title">Now Playing...</h4>
+    </div>
+    <div class="card-body" style="padding: 5px;">
+        <p class="card-text" *ngIf="PlayList.length <= 0">Songs added to the playlist will appear here...</p>
+        <p class="card-text" *ngIf="PlayList.length > 0">Next up...</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngIf="PlayList.length <= 0">Nothing yet...</li>
+        <li class="list-group-item" *ngFor="let item of PlayList" id="{{item.Id}}">
+            {{item.ArtistName}} - {{item.Name}}
+            <img class="img-thumbnail" src="{{item.ImageUrl}}" style="height: 100px; width: 100px;" />
+            <span><em>Added by: {{item.UserName}}</em></span>
+        </li>
+    </ul>
+    <div class="card-body" style="padding: 5px;">
+        <a href="javascript: void(0);" (click)="clear()" class="card-link pull-right" *ngIf="PlayList.length > 0">Clear</a>
+    </div>
+</div>

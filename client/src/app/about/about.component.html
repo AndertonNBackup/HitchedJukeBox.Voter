@@ -6,28 +6,5 @@
     <p>
       <i class="fa fa-bookmark-o"></i> <span translate>Version</span> {{version}}
     </p>
-    <p>
-      <select [(ngModel)]="searchType">
-        <option *ngFor="let s of searchTypes" [ngValue]="s">{{s.name}}</option>
-      </select>
-      <input [(ngModel)]="message" /><button (click)="search()">Send</button>
-    </p>
   </div>
-   <div class="container" *ngIf="serverResponse">
-    <div class="col-md-12" *ngIf="serverResponse.GetType() == 0">
-      <div class="list-group" *ngFor="let track of serverResponse.GetItems()">
-        <app-track [track]="track"></app-track>
-      </div>
-    </div>
-    <div class="col-md-12" *ngIf="serverResponse.GetType() == 1">
-      <div class="list-group" *ngFor="let album of serverResponse.GetItems()">
-        <app-album [album]="album"></app-album>
-      </div>
-    </div>
-    <div class="col-md-12" *ngIf="serverResponse.GetType() == 2">
-      <div class="list-group" *ngFor="let artist of serverResponse.GetItems()">
-        <app-artist [artist]="artist"></app-artist>
-      </div>
-    </div>
-  </div> 
 </div>

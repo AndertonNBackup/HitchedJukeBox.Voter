@@ -7,7 +7,7 @@
     <div class="d-flex w-100 justify-content-between">
         <small class="text-muted">&nbsp;</small>
         <div class="btn-group" role="group" aria-label="Basic example" style="float: right;">
-            <button [disabled]="amFetchingAlbums && true || false" title="Show Albums" type="button" class="btn btn-secondary" (click)="fetchAlbums()"><i *ngIf="amFetchingAlbums" class="fa fa-spin fa-spinner"></i><i *ngIf="!amFetchingAlbums" class="fa fa-toggle-up"></i></button>
+            <button [disabled]="(artist.albums || amFetchingAlbums) && true || false" title="Show Albums" type="button" class="btn btn-secondary" (click)="fetchAlbums()"><i *ngIf="amFetchingAlbums" class="fa fa-spin fa-spinner"></i><i *ngIf="!amFetchingAlbums" class="fa fa-toggle-up"></i></button>
         </div>
     </div>
     <p class="mb-1">&nbsp;</p>

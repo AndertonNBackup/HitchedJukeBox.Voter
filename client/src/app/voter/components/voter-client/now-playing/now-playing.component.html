@@ -8,10 +8,8 @@
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngIf="PlayList.length <= 0">Nothing yet...</li>
-        <li class="list-group-item" *ngFor="let item of PlayList" id="{{item.Id}}">
-            {{item.ArtistName}} - {{item.Name}}
-            <img class="img-thumbnail" src="{{item.ImageUrl}}" style="height: 100px; width: 100px;" />
-            <span><em>Added by: {{item.UserName}}</em></span>
+        <li class="list-group-item" style="display: block;" *ngFor="let item of PlayList; let i = index;" id="{{item.Id}}">
+            <hjbv-now-playing-item [item]="item" [index]="index"></hjbv-now-playing-item>
         </li>
     </ul>
     <div class="card-body" style="padding: 5px;">

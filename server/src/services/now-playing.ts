@@ -8,6 +8,7 @@ import { SpotifyTrack } from '../models/shared/core/spotify-track';
 import { NowPlayingRequest } from '../models/shared/now-playing/now-playing-request';
 import { NowPlayingTrackRequest } from '../models/shared/now-playing/now-playing-track-request';
 import { NowPlayingAlbumRequest } from '../models/shared/now-playing/now-playing-album-request';
+import { NowPlayingCommandRequest } from '../models/shared/now-playing/now-playing-command-request';
 import { NowPlayingResponse } from '../models/shared/now-playing/now-playing-response';
 
 import { NowPlayingItem } from '../models/shared/now-playing/now-playing-item';
@@ -35,6 +36,7 @@ export class NowPlayingService {
 
     private config(): void {
         console.log('Now Playing Service Initiated!');
+
         this.MainQueue = new Array<any>();
     }
 
@@ -56,6 +58,9 @@ export class NowPlayingService {
                     case NowPlayingRequest.NP_REQUEST_TRACK:
                         this.process_track_request(socket, nowPlayingRequest.GetData() as NowPlayingTrackRequest);
                         break;
+                    case NowPlayingRequest.NP_REQUEST_COMMAND:
+                        this.process_command_request(socket, nowPlayingRequest.GetData() as NowPlayingCommandRequest);
+                        break;
                     default:
                 }
             });
@@ -64,7 +69,6 @@ export class NowPlayingService {
     private process_track_request(socket: SocketIO.Socket, trackRequest: NowPlayingTrackRequest): void {
         trackRequest = NowPlayingTrackRequest.FromObject(trackRequest);
         let spotifyTrack: SpotifyTrack = SpotifyTrack.fromJSON(trackRequest);
-        console.log(spotifyTrack);
         
         let user = UserFunctions.getUser(socket.id);
         this.MainQueue.push(new NowPlayingItem(
@@ -78,7 +82,89 @@ export class NowPlayingService {
         let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
         socket.emit(
             NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
-            new NowPlayingResponse(this.MainQueue)
+            nowPlayingResponse
+        );
+        socket.broadcast.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+    }
+
+    private process_command_request(socket: SocketIO.Socket, commandRequest: NowPlayingCommandRequest): void {
+        commandRequest = NowPlayingCommandRequest.FromObject(commandRequest);
+        console.log(commandRequest);
+        switch (commandRequest.GetType()) {
+            case NowPlayingCommandRequest.NPC_REFRESH:
+                this.process_reresh_request(socket);
+                break;
+            case NowPlayingCommandRequest.NPC_CLEAR:
+                this.process_clear_request(socket);
+                break;
+            case NowPlayingCommandRequest.NPC_VOTE:
+                this.process_upvote_request(socket, commandRequest);
+                break;
+            case NowPlayingCommandRequest.NPC_DOWNVOTE:
+                this.process_downvote_request(socket, commandRequest);
+                break;
+            default:
+        }
+    }
+
+    private process_reresh_request(socket: SocketIO.Socket): void
+    {
+        let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
+        socket.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+    }
+
+    private process_upvote_request(socket: SocketIO.Socket, commandRequest: NowPlayingCommandRequest): void
+    {
+        let nowPlayingItem: NowPlayingItem = this.MainQueue.find(item => item.getId() === commandRequest.GetIndex());
+        let user = UserFunctions.getUser(socket.id);
+        nowPlayingItem.AddVote(user.name);
+        let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
+        socket.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+        socket.broadcast.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+    }
+
+    private process_downvote_request(socket: SocketIO.Socket, commandRequest: NowPlayingCommandRequest): void
+    {
+        let nowPlayingItem: NowPlayingItem = this.MainQueue.find(item => item.getId() === commandRequest.GetIndex());
+        let user = UserFunctions.getUser(socket.id);
+        nowPlayingItem.RemoveVote(user.name);
+        if(nowPlayingItem.GetVoteCount() <= 0) {
+            this.MainQueue = this.MainQueue.filter(item => item.getId() !== nowPlayingItem.getId());
+        }
+        let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
+        socket.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+        socket.broadcast.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+    }
+
+    private process_clear_request(socket: SocketIO.Socket): void
+    {
+        this.MainQueue = new Array<any>();
+        let nowPlayingResponse: NowPlayingResponse = new NowPlayingResponse(this.MainQueue);
+        socket.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
+        );
+        socket.broadcast.emit(
+            NowPlayingResponse.fetchNowPlayingResponseHook(this.appPrefix, NowPlayingService.SERVICE_PREFIX),
+            nowPlayingResponse
         );
     }
 

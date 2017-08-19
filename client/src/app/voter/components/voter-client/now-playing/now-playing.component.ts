@@ -4,7 +4,12 @@ import { ISubscription } from "rxjs/Subscription";
 
 import { environment } from '../../../../../environments/environment';
 
+import { AuthenticationService, Credentials } from '../../../../core/authentication/authentication.service';
+
 import { NowPlayingItem } from '../../../../core/models/shared/now-playing/now-playing-item';
+
+import { NowPlayingRequest } from '../../../../core/models/shared/now-playing/now-playing-request';
+import { NowPlayingCommandRequest } from '../../../../core/models/shared/now-playing/now-playing-command-request';
 
 import { NowPlayingService } from '../../../../core/now-playing/now-playing.service';
 import { NowPlayingResponse } from '../../../../core/models/shared/now-playing/now-playing-response';
@@ -19,8 +24,13 @@ export class NowPlayingComponent implements OnInit {
     private PlayList: Array<any>;
     private connection: ISubscription;
 
-    constructor(private nowPlayingService: NowPlayingService) {
+    private authentication: AuthenticationService;
+    private credentials: Credentials;
+
+    constructor(private nowPlayingService: NowPlayingService, authentication: AuthenticationService) {
         this.PlayList = new Array<NowPlayingItem>();
+        this.authentication = authentication;
+        this.credentials = this.authentication.credentials;
     }
 
     ngOnInit() {
@@ -31,11 +41,17 @@ export class NowPlayingComponent implements OnInit {
             console.log(this.PlayList);
         });
 
+        let commandRequest = new NowPlayingCommandRequest(NowPlayingCommandRequest.NPC_REFRESH);
+        let nowPlayingRequest = new NowPlayingRequest(NowPlayingRequest.NP_REQUEST_COMMAND, commandRequest);
+        this.nowPlayingService.talk(nowPlayingRequest);
+
     }
 
     clear() {
 
-        this.PlayList = new Array<any>();
+        let commandRequest = new NowPlayingCommandRequest(NowPlayingCommandRequest.NPC_CLEAR);
+        let nowPlayingRequest = new NowPlayingRequest(NowPlayingRequest.NP_REQUEST_COMMAND, commandRequest);
+        this.nowPlayingService.talk(nowPlayingRequest);
 
     }
 

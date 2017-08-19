@@ -5,7 +5,7 @@ var nodemon = require("gulp-nodemon");
 var console = require("better-console");
 
 gulp.task("build", function () {
-    console.clear();
+    // console.clear();
     return tsProject.src()
         .pipe(tsProject())
         .js.pipe(gulp.dest("./dist"));

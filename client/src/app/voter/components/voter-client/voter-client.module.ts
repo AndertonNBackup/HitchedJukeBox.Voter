@@ -12,6 +12,8 @@ import { TrackComponent } from '../../../voter/track/track.component';
 import { AlbumComponent } from '../../../voter/album/album.component';
 import { ArtistComponent } from '../../../voter/artist/artist.component';
 
+import { NowPlayingItemComponent } from '../../../voter/components/voter-client/now-playing/now-playing-item/now-playing-item.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -23,6 +25,7 @@ import { ArtistComponent } from '../../../voter/artist/artist.component';
       MusicSearchComponent,
       ResultsViewComponent,
       NowPlayingComponent,
+      NowPlayingItemComponent,
       TrackComponent,
       AlbumComponent,
       ArtistComponent

@@ -23,6 +23,9 @@ export class SocketService {
             upgrade: false,
             transports: ['websocket']
         });
+        this.socket.on("Test", (val: string) => {
+            console.log(val);
+        });
         this.socket.on('disconnect', (reason: string) => {
             this.socket = null;
         });

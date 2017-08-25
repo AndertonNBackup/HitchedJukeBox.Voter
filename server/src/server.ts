@@ -10,6 +10,7 @@ import { UserFunctions } from './services/user';
 
 import { SpotifyService } from './services/spotify';
 import { NowPlayingService } from './services/now-playing';
+import { RabbitMQService } from './services/rabbit-mq';
 
 class Server {
     public static readonly REDIS_HOST = 'localhost';
@@ -20,6 +21,7 @@ class Server {
     private io: SocketIO.Server;
     private spotify: SpotifyService;
     private nowPlaying: NowPlayingService;
+    private rabbit: RabbitMQService;
     private redisHost: string;
     private port: number;
 
@@ -52,32 +54,24 @@ class Server {
     private config(): void {
         this.port = parseInt(process.env.PORT) || Server.PORT;
         this.redisHost = process.env.REDIS_HOST || Server.REDIS_HOST;
-        console.log("Redis Host : " + this.redisHost);
     }
 
     private sockets(): void {
         try {
             this.io = socketIo(this.server);
             this.io.adapter(redis({ host: this.redisHost, port: 6379 }));
-
-            this.io.of('/').adapter.on('error', function(error){ console.log(error) });
         }
         catch(e)
         {
             this.io = socketIo(this.server);
         }
-        this.io.on("Test", (val: string) => {
-            console.log(val);
-        });
-
-
-        // console.log(this.io.adapter());
 
     }
 
     private services(): void {
         this.spotify = SpotifyService.bootstrap();
-        this.nowPlaying = NowPlayingService.bootstrap();
+        this.rabbit = RabbitMQService.bootstrap();
+        this.nowPlaying = NowPlayingService.bootstrap(this.rabbit);
     }
 
     private listen(): void {
@@ -98,7 +92,6 @@ class Server {
                 console.log('Connected client name : %s.', user.name);
                 this.spotify.register_hooks(this.io, socket, Server.APP_PREFIX);
                 this.nowPlaying.register_hooks(this.io, socket, Server.APP_PREFIX);
-                this.io.emit("Test","Test");
             });
             socket.on('disconnect', () => {
                 console.log('Client disconnected');

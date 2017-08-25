@@ -28,7 +28,6 @@ export class ResultsViewComponent implements OnInit, OnDestroy {
         let responseHook: string = SpotifySearchResponse.fetchSearchResponseHook(SpotifyService.appPrefix, SpotifyService.servicePrefix);
         this.connection = this.spotifyService.listen(responseHook).subscribe(searchResult => {
             this.searchResults = SpotifySearchResponse.FromObject(searchResult);
-            console.log(this.searchResults);
         });
 
     }

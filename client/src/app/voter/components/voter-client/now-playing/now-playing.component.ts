@@ -38,7 +38,6 @@ export class NowPlayingComponent implements OnInit {
         let responseHook: string = NowPlayingResponse.fetchNowPlayingResponseHook(NowPlayingService.appPrefix, NowPlayingService.servicePrefix);
         this.connection = this.nowPlayingService.listen(responseHook).subscribe(npResult => {
             this.PlayList = NowPlayingResponse.FromObject(npResult).queue;
-            console.log(this.PlayList);
         });
 
         let commandRequest = new NowPlayingCommandRequest(NowPlayingCommandRequest.NPC_REFRESH);

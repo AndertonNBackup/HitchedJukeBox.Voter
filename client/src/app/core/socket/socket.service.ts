@@ -18,17 +18,13 @@ export class SocketService {
 
     connectIO(): SocketService {
         let credentials: Credentials = this.authentication.credentials;
-        console.log(credentials.username + " Connected!");
-        this.socket = io.connect(this.url + this.port, {
-            upgrade: false,
-            transports: ['websocket']
-        });
-        this.socket.on("Test", (val: string) => {
-            console.log(val);
-        });
+
+        this.socket = io.connect(this.url + this.port);
+        
         this.socket.on('disconnect', (reason: string) => {
             this.socket = null;
         });
+
         this.socket.emit('recieveUserName', { name: credentials.username });
         return this;
     }
@@ -37,14 +33,14 @@ export class SocketService {
         return this.socket ? true : false;
     }
 
-    sendMessage(id: string, message: object) {
+    public sendMessage(id: string, message: object) {
         if(!this.gotSocket()) {
             this.connectIO();
         }
         this.socket.emit(id, message);
     }
 
-    getMessages(hook: string) {
+    public getMessages(hook: string): Observable<any> {
         if(!this.gotSocket()) {
             this.connectIO();
         }

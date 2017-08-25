@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { SocketService } from '../socket/socket.service'
+import { SocketService } from '../socket/socket.service';
 
 import { NowPlayingRequest } from '../models/shared/now-playing/now-playing-request';
 import { NowPlayingResponse } from '../models/shared/now-playing/now-playing-response';

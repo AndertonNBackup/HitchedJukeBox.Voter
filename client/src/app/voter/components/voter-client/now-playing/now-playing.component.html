@@ -2,7 +2,13 @@
     <div class="card-header">
         <h4 class="card-title">Now Playing...</h4>
         <div class="row justify-content-center" *ngIf="Playing && Playing.Type && Playing.Type != '-1'">
-                <hjbv-now-playing-item [item]="Playing" [index]="index" style="width: 100%;"></hjbv-now-playing-item>
+            <hjbv-now-playing-item [item]="Playing" [index]="index" style="width: 100%;"></hjbv-now-playing-item>
+        </div>
+        <div class="row justify-content-center" style="display: block;" *ngIf="Playing && Playing.Type && Playing.Type != '-1'">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" attr.aria-valuenow="{{timerCurrent}}"
+                    aria-valuemin="0" aria-valuemax="100" [ngStyle]="{'width': timerCurrent + '%', 'height.px': 5}"></div>
+            </div>
         </div>
     </div>
     <div class="card-body" style="padding: 5px;">

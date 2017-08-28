@@ -31,6 +31,9 @@ export class NowPlayingComponent implements OnInit {
     private authentication: AuthenticationService;
     private credentials: Credentials;
 
+    private timerHandle: any;
+    private timerCurrent: number;
+
     constructor(private nowPlayingService: NowPlayingService, private queueManagerService: QueueManagerService, authentication: AuthenticationService) {
         this.PlayList = new Array<NowPlayingItem>();
         this.authentication = authentication;
@@ -44,12 +47,25 @@ export class NowPlayingComponent implements OnInit {
             this.PlayList = NowPlayingResponse.FromObject(npResult).queue;
         });
 
+        let npItem: NowPlayingItem;
         let playerResponseHook: string = QueueManagerResponse.fetchQueueManagerResponseHook(QueueManagerService.appPrefix, QueueManagerService.servicePrefix);
         this.connection = this.queueManagerService.listen(playerResponseHook).subscribe(qmResult => {
 
-            let item = QueueManagerResponse.FromObject(qmResult).item;
-            this.Playing = NowPlayingItem.FromObject(item);
+            clearTimeout(this.timerHandle);
+            let ProgressCount: number = 0;
+            let npItem = QueueManagerResponse.FromObject(qmResult).item;
+            npItem = NowPlayingItem.FromObject(npItem);
+            this.Playing = NowPlayingItem.FromObject(npItem);
             console.log(this.Playing);
+
+            this.timerHandle = setInterval(() => {
+                this.timerCurrent = ((ProgressCount + 1) / npItem.GetPlaytime()) * 100;
+                ProgressCount++;
+                if((this.timerCurrent >= 100) || ProgressCount >=  npItem.GetPlaytime()) {
+                  clearTimeout(this.timerHandle);
+                }
+              }, 1000);
+
         });
 
         let commandRequest = new NowPlayingCommandRequest(NowPlayingCommandRequest.NPC_REFRESH);

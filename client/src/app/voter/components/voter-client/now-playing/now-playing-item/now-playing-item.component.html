@@ -2,9 +2,9 @@
 <div style="margin: 0; width: 100%;"><small><strong>{{item.Name}}</strong></small></div>
 <div style="margin: 0; width: 100%;"><small>{{item.ArtistName}}</small></div>
 <div style="margin: 0; padding: 5px; width: 100%; clear: both;">
-    <span class="badge badge-pill badge-primary">{{item.GetVoteCount()}}</span>
+    <span class="badge badge-pill badge-primary" *ngIf="!item.isPlayed()">{{item.GetVoteCount()}}</span>
     <span title="Added by"><small><i class="fa fa-plus-square-o"></i>&nbsp;<em>{{item.UserName}}</em></small></span>
-    <span class="pull-right">
+    <span class="pull-right" *ngIf="!item.isPlayed()">
         <i (click)="upVote(i)" *ngIf="!item.VotedFor(credentials.username)" class="fa fa-thumbs-up"></i>
         <i (click)="downVote(i)" *ngIf="item.GetVoteCount() > 1 && item.VotedFor(credentials.username)" class="fa fa-thumbs-down"></i>
         <i (click)="downVote(i)" *ngIf="item.GetVoteCount() <= 1 && item.VotedFor(credentials.username)" class="fa fa-minus-square-o"></i>

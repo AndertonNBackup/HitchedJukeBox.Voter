@@ -15,7 +15,7 @@ import { RabbitMQService } from './services/rabbit-mq';
 class Server {
     public static readonly REDIS_HOST = 'localhost';
     public static readonly PORT: number = 8080;
-    public static readonly APP_PREFIX: string = "HJBV";
+    public static readonly APP_PREFIX: string = "HJB";
     public app: any;
     private server: any;
     private io: SocketIO.Server;

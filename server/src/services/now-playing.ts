@@ -56,7 +56,7 @@ export class NowPlayingService {
                 let user = UserFunctions.getUser(socket.id);
                 nowPlayingRequest = NowPlayingRequest.FromObject(nowPlayingRequest);
                 nowPlayingRequest.AddCredentials(user);
-                this.rabbit.sendMessage(nowPlayingRequest);
+                this.rabbit.sendMessage(RabbitMQService.RS_VOTER_Q, nowPlayingRequest);
 
             });
     }

@@ -13,6 +13,8 @@ import { NowPlayingCommandRequest } from '../../../../core/models/shared/now-pla
 
 import { NowPlayingService } from '../../../../core/now-playing/now-playing.service';
 import { NowPlayingResponse } from '../../../../core/models/shared/now-playing/now-playing-response';
+import { QueueManagerService } from '../../../../core/queue-manager/queue-manager.service';
+import { QueueManagerResponse } from '../../../../core/models/shared/queue-manager/queue-manager-response';
 
 @Component({
     selector: 'hjbv-now-playing',
@@ -22,12 +24,14 @@ import { NowPlayingResponse } from '../../../../core/models/shared/now-playing/n
 export class NowPlayingComponent implements OnInit {
 
     private PlayList: Array<any>;
+    private Playing: NowPlayingItem;
     private connection: ISubscription;
+    private playerConnection: ISubscription;
 
     private authentication: AuthenticationService;
     private credentials: Credentials;
 
-    constructor(private nowPlayingService: NowPlayingService, authentication: AuthenticationService) {
+    constructor(private nowPlayingService: NowPlayingService, private queueManagerService: QueueManagerService, authentication: AuthenticationService) {
         this.PlayList = new Array<NowPlayingItem>();
         this.authentication = authentication;
         this.credentials = this.authentication.credentials;
@@ -38,6 +42,14 @@ export class NowPlayingComponent implements OnInit {
         let responseHook: string = NowPlayingResponse.fetchNowPlayingResponseHook(NowPlayingService.appPrefix, NowPlayingService.servicePrefix);
         this.connection = this.nowPlayingService.listen(responseHook).subscribe(npResult => {
             this.PlayList = NowPlayingResponse.FromObject(npResult).queue;
+        });
+
+        let playerResponseHook: string = QueueManagerResponse.fetchQueueManagerResponseHook(QueueManagerService.appPrefix, QueueManagerService.servicePrefix);
+        this.connection = this.queueManagerService.listen(playerResponseHook).subscribe(qmResult => {
+
+            let item = QueueManagerResponse.FromObject(qmResult).item;
+            this.Playing = NowPlayingItem.FromObject(item);
+            console.log(this.Playing);
         });
 
         let commandRequest = new NowPlayingCommandRequest(NowPlayingCommandRequest.NPC_REFRESH);

@@ -9,7 +9,8 @@ import { UserFunctions } from './user';
 export class RabbitMQService {
 
     private static readonly RS_BASE: string = "HBJBV.Rabbit.";
-    private static readonly RS_VOTER_Q: string = "Voter2Server";
+    public static readonly RS_VOTER_Q: number = 0;
+    public static readonly RS_PLAYER_Q: number = 1;
 
     private host: string = process.env.RABBIT_HOST || 'amqp://rabbitmq';
     private channel: amqp.Channel;
@@ -35,38 +36,37 @@ export class RabbitMQService {
         amqp.connect(this.host, (err, conn) => {
             conn.createChannel((err, ch) => {
                 this.channel = ch;
-                this.channel.assertQueue(
-                    RabbitMQService.RS_BASE + RabbitMQService.RS_VOTER_Q, 
-                    { 
-                        durable: false 
-                    }
-                );
+                this.assertQueue(RabbitMQService.RS_VOTER_Q);
             });
         });
     }
 
-    public sendMessage(message: any) {
+    private assertQueue(queue: number) {
+        this.channel.assertQueue(
+            RabbitMQService.fetchQueueName(queue),
+            {
+                durable: false
+            }
+        );
+    }
+
+    public sendMessage(queue: number, message: any) {
         let serialisedMessage: string = JSON.stringify(message);
         return this.channel.sendToQueue(
-            RabbitMQService.RS_BASE + RabbitMQService.RS_VOTER_Q, 
+            RabbitMQService.fetchQueueName(queue),
             new Buffer(serialisedMessage)
         );
     }
 
-    public getMessages(): Observable<any> {
+    public getMessagesObervable(queue: number): Observable<any> {
         let observable = new Observable(observer => {
 
             amqp.connect(this.host, (err, conn) => {
                 conn.createChannel((err, ch) => {
                     this.channel = ch;
-                    this.channel.assertQueue(
-                        RabbitMQService.RS_BASE + RabbitMQService.RS_VOTER_Q, 
-                        { 
-                            durable: false 
-                        }
-                    );
+                    this.assertQueue(queue);
                     this.channel.consume(
-                        RabbitMQService.RS_BASE + RabbitMQService.RS_VOTER_Q,
+                        RabbitMQService.fetchQueueName(queue),
                         msg => {
                             observer.next(msg.content.toString());
                         },
@@ -83,4 +83,19 @@ export class RabbitMQService {
         return observable;
     }
 
+    private static fetchQueueName(queue: number): string {
+        let queueName: string = "";
+
+        switch (queue) {
+            case RabbitMQService.RS_VOTER_Q:
+                queueName = "Voter2Server";
+                break;
+            case RabbitMQService.RS_PLAYER_Q:
+                queueName = "Player2Server";
+                break;
+            default:
+        }
+
+        return RabbitMQService.RS_BASE + queueName;
+    }
 }

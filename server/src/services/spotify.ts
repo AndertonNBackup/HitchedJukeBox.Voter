@@ -17,6 +17,8 @@ import { SpotifyAlbumResponseData } from '../models/shared/spotify/spotify-album
 
 export class SpotifyService {
     public static readonly SERVICE_PREFIX: string = "Spotify";
+    public static readonly CLIENT_ID: string = process.env.CLIENT_ID || '';
+    public static readonly CLIENT_SECRET: string = process.env.CLIENT_SECRET || '';
 
     private appPrefix: string;
 
@@ -40,8 +42,8 @@ export class SpotifyService {
     private config(): void {
         console.log('Spotify Service Initiated!');
         this.spotify = new SpotifyWebApi({
-            clientId: '4658a83f5b35440398ea4f3590979658',
-            clientSecret: 'f4c1782bf58446518647dd2c9a272bc2'
+            clientId: SpotifyService.CLIENT_ID,
+            clientSecret: SpotifyService.CLIENT_SECRET
         });
     }
 
